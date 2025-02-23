@@ -1,4 +1,4 @@
-The website test contains 13 questions and consists of 3 category:
+The website  contains  3 category:
 
 - Easy
 - Medium
