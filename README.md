@@ -20,8 +20,6 @@ relate to other entities.
 
 ---
 
-Questions 1- 9
-
 1. Show first name, last name, and gender of patients whose gender is 'M'.
 
 ```sql
@@ -91,59 +89,194 @@ from patients p,province_names pn
 where p.province_id=pn.province_id;
 ```
 
-8. Show the first_name, last_name. hire_date of the most recently hired employee.
+8. Show how many patients have a birth_date with 2010 as the birth year.
 
 ```sql
-SELECT first_name, last_name, hire_date
-FROM employees
-ORDER BY hire_date DESC
-LIMIT 1;
+select count(*)
+from patients 
+where year(birth_date)=2010;
 ```
 
-9. Show the average unit price rounded to 2 decimal places, the total units in stock, total discontinued products from the products table.
+9. Show the first_name, last_name, and height of the patient with the greatest height.
 
 ```sql
-SELECT ROUND(AVG(unit_price), 2)                     AS average_unit_price,
-       SUM(units_in_stock)                           AS total_units_in_stock,
-       SUM(CASE WHEN discontinued THEN 1 ELSE 0 END) AS total_discontinued_products
-FROM products;
+select first_name,last_name,height
+from patients 
+where height = (select max(height) from patients);
+```
+
+10. Show all columns for patients who have one of the following patient_ids: 1,45,534,879,1000
+```sql
+select *
+from patients 
+where patient_id in (1,45,534,879,1000);
+```
+
+11. Show the total number of admissions. 
+
+```sql
+select count(*)
+from admissions;
+```
+12. Show all the columns from admissions where the patient was admitted and discharged on the same day.
+
+```sql
+select *
+from admissions 
+where admission_date=discharge_date;
+```
+13. Show the patient id and the total number of admissions for patient_id 579..
+
+```sql
+select patient_id,count(*) as total_admissions
+from admissions where patient_id=579;
+```
+14. Based on the cities that our patients live in, show unique cities that are in province_id 'NS'.
+
+```sql
+select distinct city 
+from patients where province_id='NS';
+```
+```sql
+SELECT city
+FROM patients
+GROUP BY city
+HAVING province_id = 'NS';
+```
+15. Write a query to find the first_name, last name and birth date of patients who has height greater than 160 and weight greater than 70.
+
+```sql
+select first_name,last_name,birth_date 
+from patients 
+where height>160 and weight>70;
+```
+16. Write a query to find list of patients first_name, last_name, and allergies where allergies are not null and are from the city of 'Hamilton'.
+
+```sql
+select first_name,last_name,allergies
+from patients 
+where allergies is not NULL and city="Hamilton";
 ```
 
 ### Section2: Medium
 
 ---
 
-Questions 1- 3
-
-1. Show the ProductName, CompanyName, CategoryName from the products, suppliers, and categories table
+1. Show unique birth years from patients and order them by ascending.
 
 ```sql
-SELECT p.product_name, s.company_name, c.category_name
-FROM products p
-JOIN categories c ON p.category_id = c.category_id
-JOIN suppliers s ON p.supplier_id = s.supplier_id;
+select distinct year(birth_date) as birth_years
+from patients 
+order by birth_years asc;
 ```
 
-2. Show the category_name and the average product unit price for each category rounded to 2 decimal places.
+2. Show unique first names from the patients table which only occurs once in the list.
+For example, if two or more people are named 'John' in the first_name column then don't include their name in the output list.
+If only 1 person is named 'Leo' then include them in the output.
 
 ```sql
-SELECT c.category_name, ROUND(AVG(p.unit_price), 2) AS average_unit_price
-FROM products p
-JOIN categories c ON p.category_id = c.category_id
-GROUP BY c.category_name;
+SELECT first_name
+FROM patients
+GROUP BY first_name
+HAVING COUNT(first_name) = 1
+```
+```sql
+SELECT first_name
+FROM (
+    SELECT
+      first_name,
+      count(first_name) AS occurrencies
+    FROM patients
+    GROUP BY first_name
+  )
+WHERE occurrencies = 1
 ```
 
-3. Show the city, company_name, contact_name from the customers and suppliers table merged together.
-   Create a column which contains 'customers' or 'suppliers' depending on the table it came from.
+3. Show patient_id and first_name from patients where their first_name start and ends with 's' and is at least 6 characters long.
 
 ```sql
-SELECT city, company_name, contact_name, 'customers' AS source
-FROM customers
-UNION ALL
-SELECT city, company_name, contact_name, 'suppliers'
-FROM suppliers;
+select patient_id,first_name
+from patients 
+where first_name like 's____%s' ;
 ```
+```sql
+SELECT
+  patient_id,
+  first_name
+FROM patients
+WHERE
+  first_name LIKE 's%s'
+  AND len(first_name) >= 6;
+```
+```sql
+SELECT
+  patient_id,
+  first_name
+FROM patients
+where
+  first_name like 's%'
+  and first_name like '%s'
+  and len(first_name) >= 6;
+```
+4. Show patient_id, first_name, last_name from patients whos diagnosis is 'Dementia'. Primary diagnosis is stored in the admissions table.
 
+```sql
+select p.patient_id,p.first_name,p.last_name
+from patients p,admissions a
+where p.patient_id=a.patient_id and a.diagnosis='Dementia' ;
+
+```
+5. Display every patient's first_name. Order the list by the length of each name and then by alphabetically.
+
+```sql
+SELECT first_name
+FROM patients
+order by
+  len(first_name),
+  first_name;
+```
+6. Show the total amount of male patients and the total amount of female patients in the patients table.
+Display the two results in the same row.
+
+```sql
+select(
+    select count(*)
+    from patients
+    where gender = 'M'
+  ) as male_count, (
+    select count(*)
+    from patients
+    where gender = 'F'
+  ) as female_count;
+
+```
+7. Show first and last name, allergies from patients which have allergies to either 'Penicillin' or 'Morphine'. Show results ordered ascending by allergies then by first_name then by last_name.
+
+```sql
+SELECT
+  first_name,
+  last_name,
+  allergies
+FROM patients
+WHERE
+  allergies IN ('Penicillin', 'Morphine')
+ORDER BY
+  allergies,
+  first_name,
+  last_name;
+```
+8. Show patient_id, diagnosis from admissions. Find patients admitted multiple times for the same diagnosis.
+
+```sql
+SELECT
+  patient_id,
+  diagnosis
+FROM admissions
+GROUP BY
+  patient_id,
+  diagnosis
+HAVING COUNT(*) > 1;
+```
 ---
 
 ### Section3: Hard
