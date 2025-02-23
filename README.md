@@ -277,6 +277,38 @@ GROUP BY
   diagnosis
 HAVING COUNT(*) > 1;
 ```
+9. Show the city and the total number of patients in the city.
+Order from most to least patients and then by city name ascending..
+
+```sql
+select p.city, count(*)  as num_patients
+from patients p
+group by p.city
+order by num_patients desc, p.city asc;
+```
+10. Show first name, last name and role of every person that is either patient or doctor.
+The roles are either "Patient" or "Doctor"
+
+```sql
+select p.first_name,p.last_name,'Patient' as role
+from patients p
+union all
+select d.first_name,d.last_name,'Doctor' as role
+from doctors d;
+```
+8. Show patient_id, diagnosis from admissions. Find patients admitted multiple times for the same diagnosis.
+
+```sql
+SELECT
+  patient_id,
+  diagnosis
+FROM admissions
+GROUP BY
+  patient_id,
+  diagnosis
+HAVING COUNT(*) > 1;
+```
+
 ---
 
 ### Section3: Hard
