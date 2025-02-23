@@ -7,7 +7,8 @@ The website test contains 13 questions and consists of 3 category:
 You can use the following Entity Relationship Diagram (ERD) to figure out what data to store, the entities, their attributes and also how entities 
 relate to other entities.
 
-![image](https://github.com/gulbalasalamov/sql-practise.com/assets/19313466/c448fe34-44c4-4c12-a6aa-fcbce72aea0d)
+![image](https://github.com/user-attachments/assets/7cbda51d-d631-4353-ab59-f8f4964a7d6f)
+
 
 ## Answers
 
