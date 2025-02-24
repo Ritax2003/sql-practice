@@ -358,7 +358,52 @@ count(*) as number_of_admissions
 from admissions
 group by day_number 
 order by number_of_admissions desc;
-```   
+```
+
+15. Show all columns for patient_id 542's most recent admission_date.
+    
+```sql
+select *
+from admissions
+where patient_id is 542
+and admission_date is (
+  select max(admission_date) 
+  from admissions
+  where patient_id is 542);
+```
+
+16. Show patient_id, attending_doctor_id, and diagnosis for admissions that match one of the two criteria:
+1. patient_id is an odd number and attending_doctor_id is either 1, 5, or 19.
+2. attending_doctor_id contains a 2 and the length of patient_id is 3 characters.
+```sql
+select
+  patient_id,
+  attending_doctor_id,
+  diagnosis
+from admissions
+where
+  (
+    (patient_id % 2 is 1)
+    and (attending_doctor_id in(1, 5, 19))
+  )
+  or (
+    (attending_doctor_id like '%2%')
+    and len(patient_id) is 3
+  );
+```
+17. Show first_name, last_name, and the total number of admissions attended for each doctor. Every admission has been attended by a doctor.
+    
+```sql
+select
+  d.first_name,
+  d.last_name,
+  count(*) as admissions_total
+from
+  admissions a,
+  doctors d
+where a.attending_doctor_id=d.doctor_id
+group by d.doctor_id;
+```
 
 ---
 
