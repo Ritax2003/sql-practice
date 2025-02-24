@@ -405,7 +405,7 @@ where a.attending_doctor_id=d.doctor_id
 group by d.doctor_id;
 ```
 
-17. For each doctor, display their id, full name, and the first and last admission date they attended.
+18. For each doctor, display their id, full name, and the first and last admission date they attended.
     
 ```sql
 select
@@ -418,7 +418,7 @@ where d.doctor_id = a.attending_doctor_id
 group by d.doctor_id;
 ```
 
-18. Display the total amount of patients for each province. Order by descending.
+19. Display the total amount of patients for each province. Order by descending.
 
 ```sql
 SELECT
@@ -429,7 +429,7 @@ FROM patients pa
 group by pr.province_id
 order by patient_count desc;
 ```
-19. For every admission, display the patient's full name, their admission diagnosis, and their doctor's full name who diagnosed their problem.
+20. For every admission, display the patient's full name, their admission diagnosis, and their doctor's full name who diagnosed their problem.
 
 ```sql
 select
@@ -443,6 +443,19 @@ from
 where
   p.patient_id = a.patient_id
   and a.attending_doctor_id = d.doctor_id;
+```
+21. display the first name, last name and number of duplicate patients based on their first name and last name.
+
+Ex: A patient with an identical name can be considered a duplicate.
+
+```sql
+select
+  first_name,
+  last_name,
+  count(*) as num_of_duplicates
+from patients
+group by first_name,last_name
+having num_of_duplicates>1;
 ```
 
 
