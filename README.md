@@ -309,6 +309,57 @@ GROUP BY
 HAVING COUNT(*) > 1;
 ```
 
+9. Show all allergies ordered by popularity. Remove NULL values from query.
+```sql
+SELECT allergies, count(*) as total_diagnosis 
+FROM patients where allergies is not NULL
+group by allergies order by total_diagnosis DESC ;
+
+```
+10. Show all patient's first_name, last_name, and birth_date who were born in the 1970s decade. Sort the list starting from the earliest birth_date.
+
+```sql
+SELECT first_name,last_name,birth_date
+FROM patients 
+where year(birth_date)>=1970 and year(birth_date)<=1979
+order by birth_date asc;
+
+```
+11. We want to display each patient's full name in a single column. Their last_name in all upper letters must appear first, then first_name in all lower case letters. Separate the last_name and first_name with a comma. Order the list by the first_name in decending order
+EX: SMITH,jane.
+
+```sql
+SELECT concat(upper(last_name),',',lower(first_name)) as new_name_format
+FROM patients 
+order by first_name desc;
+
+```
+12. Show the province_id(s), sum of height; where the total sum of its patient's height is greater than or equal to 7,000.
+    
+```sql
+select province_id,sum(height) 
+from patients
+group by province_id having sum(height)>=7000;
+```
+13. Show the difference between the largest weight and smallest weight for patients with the last name 'Maroni'
+    
+```sql
+SELECT
+  (MAX(weight) - MIN(weight)) AS weight_delta
+FROM patients
+WHERE last_name = 'Maroni';
+```   
+
+14. Show all of the days of the month (1-31) and how many admission_dates occurred on that day. Sort by the day with most admissions to least admissions.
+    
+```sql
+select day(admission_date) as day_number,
+count(*) as number_of_admissions
+from admissions
+group by day_number 
+order by number_of_admissions desc;
+```   
+
 ---
 
 ### Section3: Hard
