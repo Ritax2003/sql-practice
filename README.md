@@ -405,6 +405,47 @@ where a.attending_doctor_id=d.doctor_id
 group by d.doctor_id;
 ```
 
+17. For each doctor, display their id, full name, and the first and last admission date they attended.
+    
+```sql
+select
+  d.doctor_id,
+  concat(d.first_name, " ", d.last_name) as full_name,
+  min(a.admission_date) as first_admission_date,
+  Max(a.admission_date) as last_admission_date
+from doctors d, admissions a 
+where d.doctor_id = a.attending_doctor_id
+group by d.doctor_id;
+```
+
+18. Display the total amount of patients for each province. Order by descending.
+
+```sql
+SELECT
+  province_name,
+  COUNT(*) as patient_count
+FROM patients pa
+  join province_names pr on pr.province_id = pa.province_id
+group by pr.province_id
+order by patient_count desc;
+```
+19. For every admission, display the patient's full name, their admission diagnosis, and their doctor's full name who diagnosed their problem.
+
+```sql
+select
+  p.first_name || " " || p.last_name as patient_name,
+  a.diagnosis,
+  d.first_name || " " || d.last_name as doctor_name
+from
+  patients p,
+  doctors d,
+  admissions a
+where
+  p.patient_id = a.patient_id
+  and a.attending_doctor_id = d.doctor_id;
+```
+
+
 ---
 
 ### Section3: Hard
