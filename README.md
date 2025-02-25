@@ -296,18 +296,6 @@ union all
 select d.first_name,d.last_name,'Doctor' as role
 from doctors d;
 ```
-8. Show patient_id, diagnosis from admissions. Find patients admitted multiple times for the same diagnosis.
-
-```sql
-SELECT
-  patient_id,
-  diagnosis
-FROM admissions
-GROUP BY
-  patient_id,
-  diagnosis
-HAVING COUNT(*) > 1;
-```
 
 9. Show all allergies ordered by popularity. Remove NULL values from query.
 ```sql
